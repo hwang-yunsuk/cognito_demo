@@ -10,10 +10,10 @@ public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    @GetMapping("/custom-login")
+    @GetMapping("/login")
     public String customLogin() {
-        logger.info("Accessing /custom-login");
-        return "custom-login"; // This will return the custom-login.html template
+        logger.info("Accessing /login");
+        return "login";
     }
 
     @GetMapping("/siteA")
