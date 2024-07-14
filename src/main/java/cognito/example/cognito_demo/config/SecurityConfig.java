@@ -11,28 +11,19 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests
-                    .requestMatchers("/", "/login", "/siteA", "/siteB", "/css/**", "/js/**").permitAll()
-                    .anyRequest().authenticated()
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/**").permitAll()
+                .anyRequest().authenticated()
             )
-            .formLogin(formLogin ->
-                formLogin
-                    .loginPage("/login")
-                    .loginProcessingUrl("/perform_login")
-                    .defaultSuccessUrl("/siteA", true)
-                    .failureUrl("/login?error=true")
-                    .permitAll()
-            )
-            .logout(logout -> logout.permitAll())
             .oauth2Login(oauth2Login ->
                 oauth2Login
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/siteA", true)
+                    .defaultSuccessUrl("/")
+            )
+            .logout(logout -> logout // ログアウトの設定
+                .logoutSuccessUrl("/") // ログアウト成功時のリダイレクトURL
             );
-
         return http.build();
     }
 }
