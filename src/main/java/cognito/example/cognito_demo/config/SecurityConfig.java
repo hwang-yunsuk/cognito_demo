@@ -13,9 +13,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomOAuth2LoginSuccessHandler customOAuth2LoginSuccessHandler;
+    private final CognitoOidcLogoutSuccessHandler cognitoOidcLogoutSuccessHandler;
 
-    public SecurityConfig(CustomOAuth2LoginSuccessHandler customOAuth2LoginSuccessHandler) {
+    public SecurityConfig(CustomOAuth2LoginSuccessHandler customOAuth2LoginSuccessHandler, CognitoOidcLogoutSuccessHandler cognitoOidcLogoutSuccessHandler) {
         this.customOAuth2LoginSuccessHandler = customOAuth2LoginSuccessHandler;
+        this.cognitoOidcLogoutSuccessHandler = cognitoOidcLogoutSuccessHandler;
     }
 
     @Bean
@@ -36,9 +38,10 @@ public class SecurityConfig {
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/") // ログアウト成功時にリダイレクトするURL
-                .invalidateHttpSession(true) // セッションを無効化する
-                .deleteCookies("JSESSIONID") // クッキーを削除する
+                .logoutSuccessHandler(cognitoOidcLogoutSuccessHandler)
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID", "remember-me")
             );
         return http.build();
     }

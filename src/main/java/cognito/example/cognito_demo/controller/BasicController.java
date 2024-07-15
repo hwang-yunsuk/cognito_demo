@@ -18,4 +18,9 @@ public class BasicController {
     public String siteA() {
         return "siteA";
     }
+
+    @GetMapping("/siteB")
+    public String siteB() {
+        return "siteB";
+    }
 }
