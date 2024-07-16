@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Site A</title>
     <meta charset="UTF-8">
@@ -29,18 +30,14 @@
         </div>
         <div class="row">
             <div class="col-6 my-4" style="text-align: center">
-                <div sec:authorize="isAnonymous()" style="padding-left: 10rem">
-                    <a th:href="@{http://localhost:8081/siteB}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-                        SiteB
-                    </a>
-                </div>
+                <a th:href="@{'http://localhost:8081/siteB?token=' + ${token}}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+                    SiteB
+                </a>
             </div>
             <div class="col-6 my-4" style="text-align: center">
-                <div sec:authorize="isAnonymous()" style="padding-right: 10rem">
-                    <a th:href="@{/logout}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-                        Logout
-                    </a>
-                </div>
+                <a th:href="@{/logout}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+                    Logout
+                </a>
             </div>
         </div>
     </div>
