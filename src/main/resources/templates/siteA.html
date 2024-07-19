@@ -30,9 +30,11 @@
         </div>
         <div class="row">
             <div class="col-6 my-4" style="text-align: center">
-                <a th:href="@{'http://localhost:8081/siteB?token=' + ${token}}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
-                    SiteB
-                </a>
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/redirectToSiteB}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+                        SiteB
+                    </a>
+                </div>
             </div>
             <div class="col-6 my-4" style="text-align: center">
                 <a th:href="@{/logout}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
