@@ -1,9 +1,5 @@
 package cognito.example.cognito_demo.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -11,14 +7,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import cognito.example.cognito_demo.service.CognitoService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Controller
 public class BasicController {
+
+    private final CognitoService cognitoService;
+
+    public BasicController(CognitoService cognitoService) {
+        this.cognitoService = cognitoService;
+    }
 
     @GetMapping("/")
     public String login(Authentication authentication) {
@@ -47,7 +51,15 @@ public class BasicController {
             String email = decodedJWT.getClaim("email").asString();
 
             String encodedEmail = URLEncoder.encode(email, StandardCharsets.UTF_8.toString());
-            return "redirect:http://localhost:8081/oauth2/authorization/cognito?email=" + encodedEmail;
+
+            // Check if the user exists in cognitoB
+            boolean userExistsInCognitoB = cognitoService.checkIfUserExists(email);
+
+            if (userExistsInCognitoB) {
+                return "redirect:http://localhost:8081/oauth2/authorization/cognito?email=" + encodedEmail;
+            } else {
+                return "redirect:/siteA";
+            }
         }
         return "redirect:/";
     }
