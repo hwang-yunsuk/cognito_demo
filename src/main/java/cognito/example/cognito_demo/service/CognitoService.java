@@ -28,6 +28,7 @@ public class CognitoService {
     private String region;
 
     private CognitoIdentityProviderClient createCognitoClient() {
+        // AWSの認証情報を使用してCognitoクライアントを作成
         AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKeyId, secretAccessKey);
         return CognitoIdentityProviderClient.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
@@ -36,6 +37,7 @@ public class CognitoService {
     }
 
     public boolean checkIfUserExists(String email) {
+        // Cognitoクライアントを使用してユーザーの存在を確認
         try (CognitoIdentityProviderClient cognitoClient = createCognitoClient()) {
             ListUsersRequest request = ListUsersRequest.builder()
                     .userPoolId(userPoolId)
@@ -44,6 +46,7 @@ public class CognitoService {
 
             ListUsersResponse response = cognitoClient.listUsers(request);
             List<UserType> users = response.users();
+            // ユーザーリストが空でなければユーザーは存在する
             return !users.isEmpty();
         } catch (Exception e) {
             e.printStackTrace();

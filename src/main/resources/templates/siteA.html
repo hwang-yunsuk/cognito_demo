@@ -12,7 +12,11 @@
             text-align: center;
         }
         .navbar {
-            background-color: #1d2124 !important
+            background-color: #1d2124 !important;
+        }
+        #error-message {
+            color: red;
+            text-align: center;
         }
     </style>
 </head>
@@ -26,12 +30,14 @@
                 <h2>Site A</h2>
                 <hr class="my-4" style="background-color: black">
                 <p>Welcome to Site A! You have successfully logged in.</p>
+                <!-- エラーメッセージの表示 -->
+                <p id="error-message" th:text="${errorMessage}"></p>
             </div>
         </div>
         <div class="row">
             <div class="col-6 my-4" style="text-align: center">
                 <div sec:authorize="isAnonymous()">
-                    <a th:href="@{/redirectToSiteB}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+                    <a th:href="@{/redirectToSiteB}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" onclick="clearErrorMessage()">
                         SiteB
                     </a>
                 </div>
@@ -44,6 +50,13 @@
         </div>
     </div>
 </section>
+
+<script>
+    // エラーメッセージをクリアする関数
+    function clearErrorMessage() {
+        document.getElementById('error-message').innerText = '';
+    }
+</script>
 
 </body>
 </html>
